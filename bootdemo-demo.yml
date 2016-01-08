@@ -1,0 +1,5 @@
+boot:
+  demo:
+    payeeNameLabel: payeeName
+    payeeType: checking
+    
