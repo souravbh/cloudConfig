@@ -37,7 +37,7 @@
             </camunda:properties>
          </extensionElements>
       </startEvent>
-      <userTask camunda:assignee="kermit" camunda:formKey="embedded:/forms/addStateID.html"
+      <userTask camunda:assignee="kermit" camunda:formKey="embedded:app:forms/addStateID.html"
                 completionQuantity="1"
                 id="user_task_review_tweet"
                 implementation="##unspecified"
@@ -150,7 +150,7 @@ bill = bill * 1.05
  execution.setVariable("bill", bill);
 </script>
       </scriptTask>
-      <userTask camunda:assignee="demo" camunda:formKey="embedded:/forms/reviewInvoice.html"
+      <userTask camunda:assignee="demo" camunda:formKey="embedded:app:forms/reviewInvoice.html"
                 completionQuantity="1"
                 id="sid-F499068B-27B0-4BC7-A628-247BB82CDC0C"
                 implementation="##unspecified"
