@@ -51,6 +51,9 @@ http://**{url}**.openshiftapps.com/ .
 ->shows the running docker processes 
 docker ps 
 
+--> pxoxy localhost address to be called from service inside docker
+sudo ifconfig lo0 alias 123.123.123.123/24
+
 ->shows the images available in local 
 docker images 
 
