@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+
+public class ForkAndJoinTest {
+
+	class Response {
+		public boolean response;
+		public String cin;
+
+		@Override
+		public String toString() {
+			return "Response [response=" + response + ", cin=" + cin + "]";
+		}
+	}
+
+	class MyRecursiveTask extends RecursiveTask<List<Response>> {
+
+		private List<String> cinList;
+
+		public MyRecursiveTask(List<String> cinList) {
+			this.cinList = cinList;
+		}
+
+		protected List<Response> compute() {
+
+			// if work is above threshold, break tasks up into smaller tasks
+			if (this.cinList.size() > 1) {
+
+				List<MyRecursiveTask> subtasks = new ArrayList<MyRecursiveTask>();
+				subtasks.addAll(createSubtasks());
+
+				for (MyRecursiveTask subtask : subtasks) {
+					subtask.fork();
+				}
+
+				List<Response> responseList = new ArrayList<Response>();
+				for (MyRecursiveTask subtask : subtasks) {
+					responseList.addAll(subtask.join());
+				}
+				return responseList;
+
+			} else {
+				System.out.println("doing myself value ::" + cinList.get(0));
+				List<Response> responseList = new ArrayList<Response>();
+				Response r = new Response();
+				r.response = true;
+				r.cin = cinList.get(0);
+				responseList.add(r);
+				return responseList;
+			}
+		}
+
+		private List<MyRecursiveTask> createSubtasks() {
+			List<MyRecursiveTask> subtasks = new ArrayList<MyRecursiveTask>();
+
+			this.cinList.forEach(cin -> {
+				MyRecursiveTask subTask = new MyRecursiveTask(
+						new ArrayList<String>() {
+							private static final long serialVersionUID = 1L;
+							{
+								add(cin);
+							}
+						});
+				subtasks.add(subTask);
+			});
+			return subtasks;
+		}
+	}
+
+	public static void main(String[] args) {
+		ForkJoinPool forkJoinPool = new ForkJoinPool(4);
+		List<String> cinList = new ArrayList<String>() {
+			private static final long serialVersionUID = 1L;
+			{
+				add("1");
+				add("2");
+				add("3");
+				add("4");
+			}
+		};
+
+		MyRecursiveTask myRecursiveTask = new ForkAndJoinTest().new MyRecursiveTask(
+				cinList);
+		List<Response> responseList = forkJoinPool.invoke(myRecursiveTask);
+		System.out.println("mergedResult = " + responseList);
+	}
+}
